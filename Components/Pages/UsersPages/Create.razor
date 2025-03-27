@@ -1,0 +1,131 @@
+﻿@page "/users/create"
+@using Microsoft.EntityFrameworkCore
+@using BlazorCrud.Models
+@inject IDbContextFactory<BlazorCrud.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject HttpClientRequest httpclient
+@inject IConfiguration env
+@inject IJSRuntime js
+<PageTitle>Create</PageTitle>
+
+<div class="create-card">
+    <div class="back-link">
+        <a href="/"><i class="bi bi-arrow-left"></i> Voltar</a>
+    </div>
+
+    <EditForm method="post" Model="Users" OnValidSubmit="AddUsers" FormName="create" Enhance>
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" role="alert" />
+        <h3 style="margin-top: 5%">1. Dados pessoais</h3>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <label for="name" class="form-label">Nome:</label>
+                <InputText id="name" @bind-Value="Users.Name" class="form-control" />
+                <ValidationMessage For="() => Users.Name" class="text-danger" />
+            </div>
+            <div class="col-md-6">
+                <label for="sirname" class="form-label">Sobrenome:</label>
+                <InputText id="sirname" @bind-Value="Users.SirName" class="form-control" />
+                <ValidationMessage For="() => Users.SirName" class="text-danger" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="email" class="form-label">E-mail:</label>
+                <InputText id="email" @bind-Value="Users.Email" class="form-control" />
+                <ValidationMessage For="() => Users.Email" class="text-danger" />
+            </div>
+            <div class="col-md-6">
+                <label for="password" class="form-label">Senha:</label>
+                <InputText id="password" @bind-Value="Users.Password" class="form-control" />
+                <ValidationMessage For="() => Users.Password" class="text-danger" />
+            </div>
+        </div>
+        <h3 style="margin-top: 5%">2. Endereço</h3>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <label for="cep" class="form-label">CEP:</label>
+                <InputText id="cep" @bind-Value="Users.Cep" class="form-control" @oninput="CheckCepInput" />
+                <ValidationMessage For="() => Users.Cep" class="text-danger" />
+            </div>
+            <div class="col-md-6">
+                <label for="street" class="form-label">Rua:</label>
+                <InputText id="street" @bind-Value="Users.Street" class="form-control" disabled="@isAddressFilled" />
+                <ValidationMessage For="() => Users.Street" class="text-danger" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <label for="neighborhood" class="form-label">Bairro:</label>
+                <InputText id="neighborhood" @bind-Value="Users.Neighborhood" class="form-control" disabled="@isAddressFilled" />
+                <ValidationMessage For="() => Users.Neighborhood" class="text-danger" />
+            </div>
+            <div class="col-md-3">
+                <label for="neighborhood" class="form-label">Número:</label>
+                <InputNumber id="neighborhood" @bind-Value="Users.StreetN" class="form-control" />
+                <ValidationMessage For="() => Users.Neighborhood" class="text-danger" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="city" class="form-label">Cidade:</label>
+                <InputText id="city" @bind-Value="Users.City" class="form-control" disabled="@isAddressFilled" />
+                <ValidationMessage For="() => Users.City" class="text-danger" />
+            </div>
+            <div class="col-md-6">
+                <label for="uf" class="form-label">Estado:</label>
+                <InputText id="uf" @bind-Value="Users.UF" class="form-control" disabled="@isAddressFilled" />
+                <ValidationMessage For="() => Users.UF" class="text-danger" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Finalizar cadastro</button>
+    </EditForm>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Users Users { get; set; } = new();
+    private bool isAddressFilled = false;
+
+    private async Task AddUsers()
+    {
+        using var context = DbFactory.CreateDbContext();
+        var lastUser = await context.Users.OrderByDescending(u => u.Id).FirstOrDefaultAsync();
+        Users.Id = (lastUser?.Id ?? 0) + 1;
+        context.Users.Add(Users);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/users");
+    }
+
+    private async Task RequestCepAsync(string cep)
+    {
+        var message = new HttpRequestMessage(HttpMethod.Get, $"{env["viacep"]}/{cep}/json");
+        var result = await httpclient.RequestHttp(message, true);
+        if (result.IsSuccessStatusCode)
+        {
+            var payload = await result.Content.ReadFromJsonAsync<CepResult>();
+
+            if (payload != null)
+            {
+                Users.Street = payload.Logradouro;
+                Users.Neighborhood = payload.Bairro;
+                Users.City = payload.Localidade;
+                Users.UF = payload.Uf;
+                isAddressFilled = true;
+                
+                await js.InvokeVoidAsync("console.log", payload);
+            }
+        }
+    }
+
+    private async Task CheckCepInput(ChangeEventArgs e)
+    {
+        var cep = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(cep) && cep.Length == 8)
+        {
+            await RequestCepAsync(cep);
+        }
+    }
+}

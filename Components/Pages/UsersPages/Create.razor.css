@@ -1,0 +1,38 @@
+﻿.create-card {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    margin-top: 25%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    .create-card h3 {
+        font-family: var(--ff-primary) !important;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .create-card .back-link a {
+        color: #6c757d;
+        text-decoration: none;
+    }
+
+    .create-card .back-link a:hover {
+        color: #5a6268;
+        text-decoration: none;
+    }
+
+    .create-card .btn {
+        width: 100%;
+        color: #fff;
+        background-color: #0086ff;
+        margin-top: 5%;
+    }

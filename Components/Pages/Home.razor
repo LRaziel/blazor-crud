@@ -1,0 +1,24 @@
+﻿@page "/"
+@using BlazorCrud.Data
+@using BlazorCrud.Models
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BlazorCrud.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Home Bemol</PageTitle>
+
+@if (isAuthenticated)
+{
+    <BlazorCrud.Components.Pages.UsersPages.Index />
+}
+
+@code {
+    private bool isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        isAuthenticated = await context.Users.AnyAsync(u => u.IsAuthenticated);
+    }
+}
+

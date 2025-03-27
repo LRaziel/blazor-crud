@@ -1,0 +1,80 @@
+﻿@page "/login"
+@layout EmptyLayout
+@inject AuthService usr
+@using Microsoft.EntityFrameworkCore
+@using BlazorCrud.Models
+@using System.Text.Json
+@inject IDbContextFactory<BlazorCrud.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Login</PageTitle>
+
+<div class="top-row px-4">
+    <img src="bemol-logo.svg" alt="Logo" class="logo" />
+</div>
+
+<div class="login-card">
+    <h1>Fazer login</h1>
+    <span>Preencha o campo a seguir para acessar sua conta</span>
+
+    <EditForm id="form-login" Model="loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <InputText id="email" @bind-Value="loginModel.Email" class="form-control" />
+            <ValidationMessage For="() => loginModel.Email" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <InputText id="password" @bind-Value="loginModel.Password" type="password" class="form-control" />
+            <ValidationMessage For="() => loginModel.Password" class="text-danger" />
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <span><a href="/users/create">Criar cadastro</a></span>
+    </EditForm>
+</div>
+
+
+@if (loginFailed)
+{
+    <div class="alert alert-danger" role="alert">
+        Login failed. Please check your email and password.
+    </div>
+}
+
+@code {
+    private LoginModel loginModel = new();
+    private bool loginFailed;
+
+    private async Task HandleLogin()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        Console.WriteLine(usr);
+        Console.WriteLine(JsonSerializer.Serialize(loginModel));
+        Console.WriteLine(context.Users);
+
+        usr.Authentication = await context.Users
+            .FirstOrDefaultAsync(u => u.Email == loginModel.Email && u.Password == loginModel.Password);
+
+        if (usr.Authentication != null)
+        {
+            usr.Authentication.IsAuthenticated = true;
+            await context.SaveChangesAsync();
+            await InvokeAsync(StateHasChanged);
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            loginFailed = true;
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}
