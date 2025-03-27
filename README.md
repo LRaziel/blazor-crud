@@ -1,6 +1,16 @@
 # Blazor CRUD
 
-Este é um projeto teste utilizando **Blazor** com .NET 8 para implementação das features: **cadastro de usuarios, visualização da lista de usuarios e login simulado os usuarios.** O projeto tem persistência de dados em memória (inMemory), ideal para testes e debbug.
+Este é um projeto de teste utilizando **Blazor** com .NET 8, implementando as seguintes funcionalidades:
+
+- Cadastro de usuários  
+- Visualização da lista de usuários  
+- Login simulado com dados em memória
+
+A persistência de dados utiliza o provedor **InMemory** do Entity Framework Core, ideal para testes e debug.
+
+> ⚠️ **Observação**: Este projeto foi desenvolvido para fins de participação em um processo seletivo da **Bemol Digital**. Os estilos, logotipos e elementos visuais da aplicação foram inspirados no site oficial da empresa e são propriedades intelectuais da mesma.
+
+---
 
 ## 📦 Tecnologias e Bibliotecas Utilizadas
 
