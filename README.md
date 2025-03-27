@@ -68,6 +68,45 @@ docker-compose up -d
 ```
 
 O projeto será executado via ***docker-compose*** para mais praticidade. 
+
 Para login inicial no projeto, usar usuario padrão definido no código:
+
 Email: ***lucas@mecontratapf.com***
+
 Senha: ***123***
+
+---
+
+## ❓ Perguntas e Respostas do Processo Seletivo
+
+### 📍 A solução deve ser disponibilizada em Cloud ou On-premise?
+
+Considero a **Cloud** a melhor solução. Com ela, temos uma ótima flexibilidade de acesso à aplicação e evitamos todas as complicações com permissões e acessos remotos que teríamos em uma rede local. A principal vantagem do ambiente on-premise seria a segurança de uma rede fechada e o controle direto da base de dados, mas, no meu ponto de vista, em todos os demais aspectos a Cloud ainda leva vantagem.
+
+---
+
+### 👥 Considerando a participação de 4 pessoas técnicas para o desenvolvimento dessa solução, qual ferramenta acredita ser apropriada para o controle de tarefas da equipe? A ferramenta é ágil?
+
+A ferramenta que eu consideraria mais apropriada seria o **Jira**, devido à sua maturidade e à praticidade no uso de metodologias ágeis, como Kanban e Scrum. O Jira também possui integração com repositórios Git via *Jira Automation* e com outras ferramentas como o **Confluence**, facilitando a documentação do projeto.  
+Como alternativa, sugeriria o **Trello**, por motivos semelhantes, apesar de suas limitações em projetos mais robustos.
+
+---
+
+### 🧑‍💼 Você se sente capaz de liderar esta equipe? Por quê?
+
+Sim, tenho boas experiências atuando como desenvolvedor no ambiente fabril, acostumado a cumprir prazos, trabalhar com metas e manter contato direto com clientes. Me considero uma pessoa com boas habilidades de comunicação e com facilidade para interagir com a equipe. Seria uma experiência nova para mim, mas com certeza eu daria o meu melhor para atender às expectativas!
+
+---
+
+### 💡 Se pudesse sugerir uma melhoria, mudança ou oportunidade, o que seria?
+
+Considerando o desafio entregue, acredito que haveria muitas melhorias a serem feitas caso a aplicação fosse destinada a um ambiente real. A começar pela ausência de um banco de dados persistente, já que foi utilizado o **InMemory** apenas para fins de teste. Além disso, seria necessária a implementação completa dos processos de CRUD e outras funcionalidades importantes para que a aplicação pudesse ser considerada um produto escalável e pronto para produção.
+
+---
+
+### 🎯 Acha válido esse desafio para o processo que está participando?
+
+Acho o teste válido e interessante, principalmente por avaliar as noções técnicas do candidato, seus conhecimentos de lógica de programação e arquitetura de software. O desafio também deixa espaço para a criatividade e expertise do desenvolvedor, permitindo que ele entregue uma solução simples, porém bem estruturada, alinhada com o proposto.
+
+
+
